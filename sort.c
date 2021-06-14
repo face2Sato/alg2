@@ -45,11 +45,11 @@ int main(int argc, char *argv[]) {
 
     start_timer(&start_tm); //時間計測開始
 
-    // selection(A, n); //selection sort
-    merge(A, 1, n); // merge sort
+    selection(A, n); //selection sort
+    //merge(A, 1, n); // merge sort
 
     // タイマーを止めて、計測時間を表示（今回はこのまま使ってもよい。今後必要に応じて、関数呼出の切り分け等をすること）
-    printf("%5d : elapsed time is %10.3f milliseconds. \n", n, get_elapsed_time(&start_tm) * 1.0e-3);
+    printf("%10.3f\n", get_elapsed_time(&start_tm) * 1.0e-3);
 
 #ifdef DEBUG
     for(i = 1; i <= n; i++) {
