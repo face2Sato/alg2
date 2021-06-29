@@ -1,7 +1,7 @@
 /*
 
-author : your name
-id     : your id
+author : yoshiki sato   
+id     : s1270115
 
 */
 
@@ -11,11 +11,15 @@ id     : your id
 
 #define INFTY 99999
 
+#define min(a,b) ( (a)<(b) ? (a) : (b))
+
 int Floyd(int, int, int);
 
 int main() {
     int i, j, k;
-
+    int vmin1,vmin2,vmax1,vmax2;
+    int max=0;
+    int min=INFTY;
     int **Data, n;
     int **d;
 
@@ -47,13 +51,34 @@ int main() {
     }
 
     /* Main routines */
-    /* [ Complete Here!! ( 3-level nested loop) ] */
-
-    /* Call main routines */
-    Data[i][j] = Floyd(Data[i][j], Data[i][k], Data[k][j]); // Floyd's Algorithm
-
+    
+    for(i=0;i<n;i++){
+        for(j=0;j<n;j++){
+            for(k=0;k<n;k++)  Data[i][j] = Floyd(Data[i][j], Data[i][k], Data[k][j]); // Floyd's Algorithm
+        }
+    }
     // end 3-level nested loop
 
+    for(i=0;i<n;i++){
+        for(j=0;j<n;j++){
+            if(min > Data[i][j]){
+                min = Data[i][j];
+                vmin1 = i;
+                vmin2 = j;
+            }
+
+            if(max < Data[i][j] && Data[i][j] != INFTY){
+                max = Data[i][j];
+                vmax1 = i;
+                vmax2 = j;
+            }
+        }
+    }
+
+    printf("Min: d(%d, %d) = %d\n",vmin1,vmin2,min);
+    printf("Max: d(%d, %d) = %d\n",vmax1,vmax2,max);
+    printf("d(%d, %d) = %d\n",vmin1,vmax1,Data[vmin1][vmax1]);
+    printf("d(%d, %d) = %d\n",vmin2,vmax2,Data[vmin2][vmax2]);
     /* free allocated memory*/
     for(i = 0; i < n; i++) {
         free(Data[i]);
@@ -69,7 +94,7 @@ int Floyd(int D_ij, int D_ik, int D_kj) {
     /* Arguments D_ij, D_ik, D_kj means D^{k-1}[i][j], D^{k-1}[i][k],D^{k-1}[k][j] at the pseudo code. */
     int Dk_ij; /* D^k[i][j] */
 
-    Dk_ij = /* [ Complete Here!! ] */;
+    Dk_ij = min(D_ij, D_ik + D_kj);
 
     return Dk_ij;
 }

@@ -1,7 +1,7 @@
 /*
 
-author : your name
-id     : your id
+author : yoshiki sato
+id     : s1270115
 
 
 必要に応じてコードを追加すること。
@@ -11,47 +11,56 @@ id     : your id
 #include <stdlib.h>
 #define INFTY 99999
 
+#define min(a,b) ( (a)<(b) ? (a) : (b))
+#define max(a,b) ( (a)>(b) ? (a) : (b))
+
 int Maggs_Plotkin(int, int, int);
 void MST_view(int **D0, int **, int);
 
 int main() {
     int i, j, k;
-    int **Data, n;
+    int **Data_orginal, **Data_edited, n;
 
     /* input data (size) */
     printf("Input the number of data: ");
     scanf("%d", &n);
     /* Generate arrays (memory allocation)*/
-    Data = (int **)malloc(n * sizeof(int *));
+    Data_orginal = (int **)malloc(n * sizeof(int *));
+    Data_edited = (int **)malloc(n * sizeof(int *));
 
     for(i = 0; i < n; i++) {
-        Data[i] = (int *)malloc(n * sizeof(int));
+        Data_orginal[i] = (int *)malloc(n * sizeof(int));
+        Data_edited[i] = (int *)malloc(n * sizeof(int));
     }
 
     /* input data (matrix)*/
     printf("Input the Adjacency or Distance matrix:\n");
     for(i = 0; i < n; i++) {
         for(j = 0; j < n; j++) {
-            scanf("%d", &Data[i][j]);
+            scanf("%d", &Data_orginal[i][j]);
         }
     }
 
     /* Main routines */
-    /* [ Complete Here!! ( 3-level nested loop) ] */
-
-    /* Call main routines */
-    Data[i][j] = Maggs_Plotkin(Data[i][j], Data[i][k], Data[k][j]);
-
+     for(i=0;i<n;i++){
+        for(j=0;j<n;j++){
+            for(k=0;k<n;k++)  Data_edited[i][j] = Maggs_Plotkin(Data_orginal[i][j], Data_orginal[i][k], Data_orginal[k][j]);
+        }
+    }
+    
     // end 3-level nested loop
 
-    // you can use MST_view function to obtain MST cost.
-    // MST_view(,Data,n);
+    
+    MST_view(Data_orginal,Data_edited,n);
 
     /* free allocated memory*/
     for(i = 0; i < n; i++) {
-        free(Data[i]);
+        free(Data_orginal[i]);
+        free(Data_edited[i]);
     }
-    free(Data);
+
+    free(Data_orginal);
+    free(Data_edited);
 
     return 0;
 }
@@ -59,7 +68,7 @@ int main() {
 int Maggs_Plotkin(int D_ij, int D_ik, int D_kj) {
     int Dk_ij;
 
-    Dk_ij = /* [ Complete Here!! ] */;
+    Dk_ij = min(D_ij, max(D_ik, D_kj));
 
     return Dk_ij;
 }
