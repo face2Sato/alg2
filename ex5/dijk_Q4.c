@@ -22,6 +22,8 @@ int main() {
     int start;
     int n;
 
+    int *cost;
+
     /* input data (size) */
     printf("Input the number of data: ");
     scanf("%d", &n);
@@ -31,17 +33,22 @@ int main() {
     d = (int *)malloc(n * sizeof(int));
     adj = (int *)malloc(n * sizeof(int));
     D = (int **)malloc(n * sizeof(int *));
+    cost = (int *)malloc(n * sizeof(int));
 
     for(i = 0; i < n; i++)
         D[i] = (int *)malloc(n * sizeof(int));
 
     /* input data (matrix)*/
 
-    
-    printf("Input the Distance matrix:\n");
+    printf("Input the cost of each vertex\n");
+
+    for(i =0; i < n; i++) scanf("%d",&cost[i]);
+
+    printf("Input the Adjacency matrix:\n");
     for(i = 0; i < n; i++) {
         for(j = 0; j < n; j++) {
             scanf("%d", &D[i][j]);
+            D[i][j] = (D[i][j] == 0 ? INFTY : cost[j]);
         }
     }
 
