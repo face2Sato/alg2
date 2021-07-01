@@ -63,7 +63,7 @@ int main() {
             sum+=Data[j][i];
             //printf("%d ",Data[i][j]);
         }
-        if(!sum) printf("Vertex %d cannot be reached from any other vertex.\n",i);
+        if(!sum) printf("Vertex %d cannot be reached from any other vertex.\n",i+1);
         //printf("\n");
     }
 
@@ -84,7 +84,7 @@ int Warshall(int A_ij, int A_ik, int A_kj) {
     /* Arguments A_ij, A_ik, A_kj means A^{k-1}[i][j], A^{k-1}[i][k],A^{k-1}[k][j] at the pseudo code. */
     int Ak_ij; /* A^k[i][j] */
 
-    Ak_ij = ((A_ij + (A_ik * A_kj > 0))? 1 : 0);
+    Ak_ij = ((A_ij + A_ik * A_kj > 0)? 1 : 0);
 
     return Ak_ij;
 }

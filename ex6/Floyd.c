@@ -17,7 +17,6 @@ int Floyd(int, int, int);
 
 int main() {
     int i, j, k;
-    int vmin1,vmin2,vmax1,vmax2;
     int max=0;
     int min=INFTY;
     int **Data, n;
@@ -30,6 +29,7 @@ int main() {
     /* Generate arrays (memory allocation)*/
     Data = (int **)malloc(n * sizeof(int *));
     d = (int **)malloc(n * sizeof(int *));
+
 
     for(i = 0; i < n; i++) {
         Data[i] = (int *)malloc(n * sizeof(int));
@@ -59,26 +59,28 @@ int main() {
     }
     // end 3-level nested loop
 
+
+
+
     for(i=0;i<n;i++){
         for(j=0;j<n;j++){
-            if(min > Data[i][j]){
+            if(min > Data[i][j])
                 min = Data[i][j];
-                vmin1 = i;
-                vmin2 = j;
-            }
-
-            if(max < Data[i][j] && Data[i][j] != INFTY){
+            if(max < Data[i][j] && Data[i][j] != INFTY)
                 max = Data[i][j];
-                vmax1 = i;
-                vmax2 = j;
-            }
         }
     }
 
-    printf("Min: d(%d, %d) = %d\n",vmin1,vmin2,min);
-    printf("Max: d(%d, %d) = %d\n",vmax1,vmax2,max);
-    printf("d(%d, %d) = %d\n",vmin1,vmax1,Data[vmin1][vmax1]);
-    printf("d(%d, %d) = %d\n",vmin2,vmax2,Data[vmin2][vmax2]);
+    for(i=0;i<n;i++){
+        for(j=0;j<n;j++){
+            if(min == Data[i][j]){
+                printf("Min: d(%d, %d) = %d\n",i+1,j+1,min);
+            }
+            if(max == Data[i][j]){
+                printf("Max: d(%d, %d) = %d\n",i+1,j+1,max);
+            }
+        }
+    }
     /* free allocated memory*/
     for(i = 0; i < n; i++) {
         free(Data[i]);
