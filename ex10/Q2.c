@@ -19,6 +19,8 @@ void main(){
 
 
     for(i=0;i<n;i++){
+        if(flg) break;
+        
         for(j=b;j>=0;j--){
             if(dp[j]!=-1 && dp[j]+a[i]<=b) dp[j+a[i]]=a[i]; 
             if(dp[b]!=-1){ 
