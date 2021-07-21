@@ -102,7 +102,7 @@ int main() {
                // indexは256個の配列。以下の行で現れた文字の「文字コードに対応する添字番号」の配列要素をカウントする )
 
     for(i = 0; S[i] != '\0'; i++) 
-            index[S[i]-'A'] ++; // Count the appearance of each character
+            index[S[i]] ++; // Count the appearance of each character
 
     for(i = 0; i < SIZE; i++) {
         if(index[i] > 0) { //存在する文字の分だけ、ノードを作る（ヒープのための準備）
@@ -115,7 +115,7 @@ int main() {
     }
 
     for(i = 1; i <= num_of_chars; i++) {
-        printf("ID:%d  character:%c  appearance:%d\n", i, data[i].word, data[i].count);
+        printf("ho ID:%d  character:%c  appearance:%d\n", i, data[i].word, data[i].count);
     }
     printf("\n");
 
@@ -123,13 +123,15 @@ int main() {
     /* (Step. 2) Create a Huffman binary tree based on the table made at Step. 1 */
     i = num_of_chars;
     construct_2(data,i);  //E
+
+
     //出現数を持った文字たちをヒープに入れる（「親は子より出現頻度の値が小さい」という順序関係に基づいてヒープ化する＝minimum heap）
 
     while(i > 1) {
 
         /* Pick up the 2 minimum appearance characters */
-        couple[0] = delete_min(); //ヒープから？？？
-        couple[1] = delete_min(); //ヒープから？？？
+        couple[0] = delete_min(data,&i); //ヒープから？？？
+        couple[1] = delete_min(data,&i); //ヒープから？？？
 
         /* Create the nodes for the picked up characters  木の左側により小さいものを置くようにする*/
         if(couple[0].articulation == -1)
@@ -142,17 +144,19 @@ int main() {
             right = head[couple[1].articulation];
 
         /* Create the articulation node to combine the nodes for the picked up characters*/
-        newnode.count = index[couple[0]->word-'A'] + index[couple[1]->word-'A']; // 取り出した2つの節点の値（出現回数）の合計
+        newnode.count = right->vertex.count + left->vertex.count ; // 取り出した2つの節点の値（出現回数）の合計
         newnode.articulation = num_of_newroot;
         newnode.visited = 0;
 
+
         /* Construct a linked-list for Huffman binary tree expressions */
         head[num_of_newroot] = make_1node(newnode);
-        head[num_of_newroot]->c_left = /* [ Complete Here!! ] */; //作成した左側用ノードを木の左側に接続する
-        head[num_of_newroot]->c_right = /* [ Complete Here!! ] */; //作成した右側用ノードを木の右側に接続する
+        head[num_of_newroot]->c_left = left; //作成した左側用ノードを木の左側に接続する
+        head[num_of_newroot]->c_right = right; //作成した右側用ノードを木の右側に接続する
 
         num_of_newroot++;
-        /* [ Complete Here!! (Write function call) ] */; //作成したノードをヒープに戻す
+        insert(data,newnode,&i); //作成したノードをヒープに戻す
+
     }
 
     /*Output Huffman binary tree*/
@@ -172,8 +176,8 @@ int main() {
 
 void construct_2(Node *A, int n) { // 無秩序に並んだ配列をヒープにする
     int i, j;
-    for(/* [ Complete Here!! ] */; i >= 1; i--) {
-        /* [ Complete Here!! (Write function call) ] */;
+    for(i = n/2; i >= 1; i--) {
+        downheap(A,i,n);
     }
 }
 
@@ -187,13 +191,12 @@ void downheap(Node *A, int k, int n) {
         j = k + k;
 
         if(j < n) {
-            if(/* [ Complete Here!! ] */ ||
-               (A[j].count == A[j + 1].count && A[j].word > A[j + 1].word)) { //ヒープ条件の確認（Ex02とほぼ同じ）
+            if( A[j].count > A[j+1].count || (A[j].count == A[j + 1].count && A[j].word > A[j + 1].word)) { //ヒープ条件の確認（Ex02とほぼ同じ）
                 j++;
             }
         }
 
-        if(/* [ Complete Here!! ] */ || (v.count == A[j].count && v.word > A[j].word))
+        if(v.count <= A[j].count  || (v.count == A[j].count && v.word > A[j].word))
             break;
 
         A[k] = A[j];
@@ -209,7 +212,7 @@ Node delete_min(Node *A, int *i) {
     n = *i;
 
     A[1] = A[n];
-    /* [ Complete Here!! (Write function call) ] */; //ヒープに戻す（Ex02とほぼ同じ）
+    downheap(A, 1, n-1); //ヒープに戻す（Ex02とほぼ同じ）
 
     (*i)--;
     return v;
@@ -219,7 +222,7 @@ void upheap(Node *A, int k) {
     Node v;
     v = A[k];
 
-    while(k > 1 && /* [ Complete Here!! ] */) { //ヒープ条件の確認（Ex02とほぼ同じ）
+    while(k > 1 && A[k/2].count >= v.count) { //ヒープ条件の確認（Ex02とほぼ同じ）
         A[k] = A[k / 2];
         k = k / 2;
     }
@@ -233,10 +236,10 @@ void insert(Node *A, Node v, int *i) {
     n = ++(*i);
 
     A[n] = v;
-    /* [ Complete Here!! (Write function call) ] */; //ヒープに戻す（Ex02とほぼ同じ）
+    upheap(A,n); //ヒープに戻す（Ex02とほぼ同じ）
 }
 
-NodePointer make_1node(Node keydata) {
+NodePointer make_1node(Node K) {
     NodePointer n;
 
     if((n = malloc(sizeof(struct list))) == NULL) {
@@ -244,7 +247,7 @@ NodePointer make_1node(Node keydata) {
         exit(8);
     }
 
-    n->vertex = keydata;
+    n->vertex = K;
     n->c_left = NULL;
     n->c_right = NULL;
     return n;
@@ -268,20 +271,19 @@ int Huffman_DFS(NodePointer p, char *bin) {
             }
             p->vertex.visited = label++;
         }
+        
 
-        if(/* [ Complete Here!! ] */) { // DFSの要領で二分木を左側優先でたどる（もし、左側の子が探索可能で、かつ未到達であるならば。
-                                        // Ex03とほぼ同じ）
+        if(p->c_left != NULL && p->c_left->vertex.visited == 0 ) { // DFSの要領で二分木を左側優先でたどる（もし、左側の子が探索可能で、かつ未到達であるならば。                           // Ex03とほぼ同じ）
             strcat(bin, "1");
             i++;
             totalbits = Huffman_DFS(p->c_left, bin);
-        } else if(
-            /* [ Complete Here!! ] */) { // DFSの要領で二分木を右側にたどる（もし、右側の子が探索可能で、かつ未到達であるならば。
+        } else if(p->c_right != NULL && p->c_right->vertex.visited == 0 ) { // DFSの要領で二分木を右側にたどる（もし、右側の子が探索可能で、かつ未到達であるならば。
                                          // Ex03とほぼ同じ）
             strcat(bin, "0");
             i++;
             totalbits = Huffman_DFS(p->c_right, bin);
-        } else
-            break;
+        }
+        else    break;
     }
 
     bin[--i] = '\0';

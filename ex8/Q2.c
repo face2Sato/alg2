@@ -7,7 +7,7 @@ int main(void){
     int N,coin_num[4];
     int paid;
 
-    printf("Input numers of each cent(coin).\n->");
+    printf("Input numbers of each cent(coin).\n->");
     scanf("%d %d %d %d",&coin_num[0],&coin_num[1],&coin_num[2],&coin_num[3]);
     
     printf("Input how many cents should you pay?\n->");
